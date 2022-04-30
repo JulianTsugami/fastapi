@@ -1,32 +1,19 @@
 from typing import Optional
 
 from fastapi import FastAPI
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 
-class Image(BaseModel):
-    url: HttpUrl
-    name: str
-
-
 class Item(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
-    tax: Optional[float] = None
-    tags: set[str] = set()
-    images: Optional[list[Image]] = None
+    name: str = Field(..., example="Foo")
+    description: Optional[str] = Field(None, example="A very nice Item")
+    price: float = Field(..., example=35.4)
+    tax: Optional[float] = Field(None, example=3.2)
 
 
-class Offer(BaseModel):
-    name: str
-    description: Optional[str] = None
-    price: float
-    items: list[Item]
-
-
-@app.post("/offers/")
-async def create_offer(offer: Offer):
-    return offer
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    results = {"item_id": item_id, "item": item}
+    return results
