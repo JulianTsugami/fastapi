@@ -1,13 +1,13 @@
 from typing import Optional
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 app = FastAPI()
 
 
 class Image(BaseModel):
-    url: str
+    url: HttpUrl
     name: str
 
 
@@ -16,7 +16,7 @@ class Item(BaseModel):
     description: Optional[str] = None
     price: float
     tax: Optional[float] = None
-    tags: set[str] = []
+    tags: set[str] = set()
     image: Optional[Image] = None
 
 
