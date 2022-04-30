@@ -1,24 +1,12 @@
-from typing import Optional
-
-from fastapi import FastAPI
-from pydantic import BaseModel, EmailStr
+from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
-
-class UserIn(BaseModel):
-    username: str
-    password: str
-    email: EmailStr
-    full_name: Optional[str] = None
+items = {"foo": "The Foo Wrestlers"}
 
 
-class UserOut(BaseModel):
-    username: str
-    email: EmailStr
-    full_name: Optional[str] = None
-
-
-@app.post("/user/", response_model=UserOut)
-async def create_user(user: UserIn):
-    return user
+@app.get("/items/{item_id}")
+async def read_item(item_id: str):
+    if item_id not in items:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return {"item": items[item_id]}
